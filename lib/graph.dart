@@ -29,12 +29,87 @@ class DirectedWeightedGraph {
         WeightAndDirection(weight: weight, direction: direction);
   }
 
-  // void printGraph() {
-  //   _adjacencyList.forEach((vertex, edges) {
-  //     print('$vertex ->');
-  //     edges.forEach((neighbor, weightAndDirection) {
-  //       print('  ${neighbor} (Weight: ${weightAndDirection.weight}, Direction: ${weightAndDirection.direction})');
-  //     });
-  //   });
-  // }
+  bool vertexExists(String vertex) {
+    return _adjacencyList.containsKey(vertex);
+  }
+
+  List<Map<String, dynamic>> ucs(String startVertex, String goalVertex) {
+    List<Node> priorityQueue = [];
+    Map<String, int> costSoFar = {startVertex: 0};
+    Map<String, String> cameFrom = {};
+
+    priorityQueue.add(Node(startVertex, 0));
+
+    while (priorityQueue.isNotEmpty) {
+      priorityQueue.sort((a, b) => a.cost.compareTo(b.cost));
+      Node current = priorityQueue.removeAt(0);
+
+      if (current.vertex == goalVertex) {
+        return reconstructPath(cameFrom, startVertex, goalVertex);
+      }
+
+      _adjacencyList[current.vertex]!.forEach((neighbor, weightAndDirection) {
+        int newCost = costSoFar[current.vertex]! + weightAndDirection.weight;
+
+        if (!costSoFar.containsKey(neighbor) ||
+            newCost < costSoFar[neighbor]!) {
+          costSoFar[neighbor] = newCost;
+          priorityQueue.add(Node(neighbor, newCost));
+          cameFrom[neighbor] = current.vertex;
+        }
+      });
+    }
+
+    return []; // No path found
+  }
+
+  List<Map<String, dynamic>> reconstructPath(
+      Map<String, String> cameFrom, String startVertex, String goalVertex) {
+    List<Map<String, dynamic>> path = [];
+    String current = goalVertex;
+
+    while (current != startVertex) {
+      String fromVertex = cameFrom[current]!;
+      path.insert(
+        0,
+        {
+          'from': fromVertex,
+          'to': current,
+          'weight': _adjacencyList[fromVertex]![current]!.weight,
+          'direction': _adjacencyList[fromVertex]![current]!.direction,
+        },
+      );
+      current = fromVertex;
+    }
+
+    return path;
+  }
 }
+
+class Node {
+  String vertex;
+  int cost;
+
+  Node(this.vertex, this.cost);
+}
+
+// void main() {
+//   DirectedWeightedGraph graph = DirectedWeightedGraph();
+
+//   graph.addEdge('A', 'B', 2, 'right');
+//   graph.addEdge('A', 'C', 5, 'left');
+//   graph.addEdge('B', 'C', 1, 'up');
+//   graph.addEdge('C', 'D', 3, 'down');
+
+//   List<Map<String, dynamic>> path = graph.ucs('A', 'D');
+
+//   if (path.isNotEmpty) {
+//     print('Shortest Path:');
+//     for (var step in path) {
+//       print(
+//           '${step['from']} -> ${step['to']} (Weight: ${step['weight']}, Direction: ${step['direction']})');
+//     }
+//   } else {
+//     print('No path found.');
+//   }
+// }

@@ -94,7 +94,17 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
                 child: Text("Go")),
             SizedBox(height: 30),
-            VoiceInputWidget(),
+            VoiceInputWidget(
+              // Pass a callback function to the child widget
+              onGettingInput: (source, destination) {
+                setState(() {
+                  // Update the value in the parent widget
+                  _sourceCantroller.text = source;
+                  _destinationController.text = destination;
+                  print('Source: $source, Destination: $destination');
+                });
+              },
+            ),
           ],
         ),
       ),
