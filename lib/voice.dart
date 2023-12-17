@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
 class VoiceInputWidget extends StatefulWidget {
@@ -7,12 +8,12 @@ class VoiceInputWidget extends StatefulWidget {
 }
 
 class _VoiceInputWidgetState extends State<VoiceInputWidget> {
-  bool isHovered = false;
-  bool isDoubleTap = false;
-
+  bool isListening = false;
+  bool isSource = true;
   final SpeechToText _speechToText = SpeechToText();
-  bool _speechEnabled = false;
-  String _wordsSpoken = "";
+  String source = "";
+  String destination = "";
+  FlutterTts flutterTts = FlutterTts();
 
   @override
   void initState() {
@@ -21,22 +22,35 @@ class _VoiceInputWidgetState extends State<VoiceInputWidget> {
   }
 
   void initSpeech() async {
-    _speechEnabled = await _speechToText.initialize();
+    await _speechToText.initialize();
     setState(() {});
   }
 
-  void _startListening() async {
-    await _speechToText.listen(onResult: _onSpeakResult);
+  void _startListening() {
+    _speechToText.listen(onResult: _onSpeakResult);
+    setState(() {
+      isListening = true;
+    });
   }
 
-  void _stopListening() async {
-    await _speechToText.stop();
+  void _stopListening() {
+    _speechToText.stop();
+    setState(() {
+      isListening = false;
+      isSource = !isSource;
+    });
   }
 
   void _onSpeakResult(result) {
     setState(() {
-      _wordsSpoken = "${result.recognizedWords}";
+      source = result.recognizedWords ?? "";
     });
+  }
+
+  void speakRoute(String text) async {
+    await flutterTts.setLanguage('en-US');
+    await flutterTts.setPitch(2.0);
+    await flutterTts.speak(text);
   }
 
   @override
@@ -44,43 +58,41 @@ class _VoiceInputWidgetState extends State<VoiceInputWidget> {
     return Column(
       children: [
         Text(
-          isDoubleTap ? 'Listening...' : 'Tap and Speak',
+          isListening ? 'Listening...' : 'Hold and Speak',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Color.fromARGB(255, 136, 35, 28),
+            color: Colors.red, // Change color as needed
           ),
         ),
         SizedBox(height: 15),
         GestureDetector(
-          onTapDown: (TapDownDetails details) {
+          onLongPress: () async {
+            if (isSource) speakRoute("Where you are?");
             _startListening();
-            setState(() {
-              isDoubleTap = !isDoubleTap;
-            });
           },
-          onTapUp: (TapUpDetails details) {
+          onLongPressEnd: (LongPressEndDetails details) {
             _stopListening();
-            setState(() {
-              isDoubleTap = false;
-            });
+            if (!isSource) speakRoute("Where you want to go?");
           },
           child: InkResponse(
             onTap: () {},
             child: AnimatedContainer(
               duration: Duration(milliseconds: 200),
               curve: Curves.easeInOut,
-              transform: Matrix4.identity()..scale(isDoubleTap ? 1.2 : 1.0),
+              transform: Matrix4.identity()..scale(isListening ? 1.2 : 1.0),
               child: Icon(
-                isDoubleTap ? Icons.mic : Icons.mic_none,
-                color: isDoubleTap ? Color.fromARGB(255, 136, 35, 28) : Color.fromARGB(255, 136, 35, 28),
-                size: isDoubleTap ? 35 : 35,
+                isListening ? Icons.mic : Icons.mic_none,
+                color: isListening
+                    ? Colors.red
+                    : Colors.red, // Change color as needed
+                size: isListening ? 35 : 35,
               ),
             ),
           ),
         ),
         SizedBox(height: 10),
-        Text(_wordsSpoken),
+        Text(source),
       ],
     );
   }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:my_app01/graph.dart';
 import 'voice.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,15 +16,26 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Blind Navigation',
       color: Colors.white,
-      theme: ThemeData(
-      ),
+      theme: ThemeData(),
       home: MyHomePage(),
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
+  late DirectedWeightedGraph uetGraph;
   @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  FlutterTts flutterTts = FlutterTts();
+  @override
+  void setState(VoidCallback fn) {
+    // TODO: implement setState
+    loadUetGraph();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -37,8 +50,7 @@ class MyHomePage extends StatelessWidget {
         titleTextStyle: TextStyle(color: Colors.white),
         backgroundColor: Color.fromARGB(255, 209, 54, 42),
       ),
-      body: 
-      Padding(
+      body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -63,15 +75,24 @@ class MyHomePage extends StatelessWidget {
             SizedBox(height: 15, width: 450),
             Center(
               child: Container(
-                width: 350,
-                child: Column(children: [
-                  Source(controller: _sourceCantroller),
-                  SizedBox(height: 10),
-                  Destination(controller: _destinationController),
-                  SizedBox(height: 10),
-                ],)
-              ),
+                  width: 350,
+                  child: Column(
+                    children: [
+                      Source(controller: _sourceCantroller),
+                      SizedBox(height: 10),
+                      Destination(controller: _destinationController),
+                      SizedBox(height: 10),
+                    ],
+                  )),
             ),
+            SizedBox(height: 30),
+            ElevatedButton(
+                onPressed: () {
+                  speakRoute(
+                      source: _sourceCantroller.text,
+                      destination: _destinationController.text);
+                },
+                child: Text("Go")),
             SizedBox(height: 30),
             VoiceInputWidget(),
           ],
@@ -79,6 +100,47 @@ class MyHomePage extends StatelessWidget {
       ),
       floatingActionButton: MapIconWidget(),
     );
+  }
+
+  void loadUetGraph() {
+    widget.uetGraph = DirectedWeightedGraph();
+    widget.uetGraph.addVertex("gate 3");
+    widget.uetGraph.addVertex("junction");
+    widget.uetGraph.addVertex("kiks department");
+    widget.uetGraph.addVertex("electrical engineering department");
+    widget.uetGraph.addVertex("main library");
+    widget.uetGraph.addVertex("civil department");
+    widget.uetGraph.addVertex("computer science department");
+
+    widget.uetGraph.addEdge("gate 3", "junction", 5, "n");
+    widget.uetGraph.addEdge("junction", "gate 3", 5, "s");
+
+    widget.uetGraph.addEdge("junction", "kiks department", 10, "e");
+    widget.uetGraph.addEdge("kiks department", "junction", 10, "w");
+
+    widget.uetGraph
+        .addEdge("electrical engineering department", "junction", 3, "w");
+    widget.uetGraph
+        .addEdge("junction", "electrical engineering department", 3, "e");
+
+    widget.uetGraph.addEdge("junction", "main library", 11, "n");
+    widget.uetGraph.addEdge("main library", "junction", 11, "s");
+
+    widget.uetGraph.addEdge("main library", "civil department", 12, "e");
+    widget.uetGraph.addEdge("civil department", "main library", 12, "w");
+
+    widget.uetGraph
+        .addEdge("civil department", "computer science department", 13, "e");
+    widget.uetGraph
+        .addEdge("computer science department", "civil department", 13, "w");
+  }
+
+  void speakRoute({required String source, required String destination}) async {
+    await flutterTts.setLanguage('en-US');
+    await flutterTts.setVoice({"name": "Karen", "locale": "en-AU"});
+    await flutterTts.setPitch(2.0);
+    await flutterTts
+        .speak("You are at " + source + " and going to " + destination);
   }
 }
 
@@ -104,7 +166,7 @@ class MapIconWidget extends StatelessWidget {
 class Source extends StatelessWidget {
   final TextEditingController controller;
 
-  Source ({required this.controller});
+  Source({required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -144,5 +206,3 @@ class Destination extends StatelessWidget {
     );
   }
 }
-
-

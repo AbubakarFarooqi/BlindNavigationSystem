@@ -30,7 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_tts: ^3.0.4
+  flutter_tts: ^3.8.5
   speech_to_text: ^6.5.1
 
 
