@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:my_app01/graph.dart';
 import 'package:my_app01/route.dart';
-import 'voice.dart';
-import 'package:flutter_tts/flutter_tts.dart';
+import 'package:my_app01/voice2.dart';
+import 'package:speech_to_text/speech_to_text.dart';
+import 'helpers.dart';
 
 void main() {
   runApp(MyApp());
@@ -210,5 +212,153 @@ class Destination extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class VoiceInputWidget extends StatefulWidget {
+  late DirectedWeightedGraph uetGraph;
+
+  @override
+  _VoiceInputWidgetState createState() => _VoiceInputWidgetState();
+}
+
+class _VoiceInputWidgetState extends State<VoiceInputWidget> {
+  bool isListening = false;
+  final SpeechToText _speechToText = SpeechToText();
+  String source = "";
+  String destination = "";
+  FlutterTts flutterTts = FlutterTts();
+  int clickCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    initSpeech();
+  }
+
+  void initSpeech() async {
+    await _speechToText.initialize();
+    setState(() {});
+  }
+
+  void _startListening() async {
+    await _speechToText.listen(onResult: _onSpeakResult);
+    setState(() {
+      isListening = true;
+    });
+  }
+
+  void _stopListening() async {
+    await _speechToText.stop();
+    setState(() {
+      isListening = false;
+    });
+
+    if (widget.uetGraph.vertexExists(source.toLowerCase())) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => VoiceInput2Widget(source: source),
+        ),
+      );
+    }
+  }
+
+  void _onSpeakResult(result) {
+    setState(() {
+      if(clickCount % 2 != 0){
+        source = result.recognizedWords ?? "";
+        send_source(source);
+      }
+      else if(clickCount % 2 == 0){
+        destination = result.recognizedWords ?? "";
+        send_destination(destination);
+      }
+      
+    });
+  }
+
+  void speakRoute(String text) async {
+    await flutterTts.setLanguage('en-US');
+    await flutterTts.setPitch(2.0);
+    await flutterTts.speak(text);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          isListening ? 'Listening...' : 'Hold and Speak',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.red,
+          ),
+        ),
+        SizedBox(height: 15),
+        GestureDetector(
+          onLongPress: () async {
+            setState(() {
+              clickCount = clickCount + 1;
+            });
+            if (clickCount % 2 != 0) {
+              speakRoute('Tell me where you are?');
+              setState(() {
+                isListening = true;
+              });
+            }
+            else if(clickCount % 2 == 0){
+              speakRoute('Tell me your destination');
+            }
+            await Future.delayed(Duration(seconds: 1));
+            _startListening();
+          },
+          onLongPressEnd: (LongPressEndDetails details) {
+            setState(() {
+              isListening = false;
+            });
+            _stopListening();
+          },
+          child: InkResponse(
+            onTap: () {},
+            child: AnimatedContainer(
+              duration: Duration(milliseconds: 200),
+              curve: Curves.easeInOut,
+              transform: Matrix4.identity()..scale(isListening ? 1.2 : 1.0),
+              child: Icon(
+                isListening ? Icons.mic : Icons.mic_none,
+                color: Colors.red,
+                size: isListening ? 35 : 35,
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: 10),
+        Text(source),
+      ],
+    );
+  }
+
+  void send_source(String source) {
+    source = convertToLowercase(source);
+    _sourceCantroller.text = "";
+    _sourceCantroller.text = source;
+    print(_sourceCantroller.text);
+    print('///////////////////////////');
+    print(source);
+  }
+
+ void send_destination(String destination) {
+    destination = convertToLowercase(destination);
+    _destinationController.text = "";
+    _destinationController.text = destination;
+    print(_sourceCantroller.text);
+    print('///////////////////////////');
+    print(destination);
+  }
+
+  String convertToLowercase(String input) {
+    return input.toLowerCase();
   }
 }

@@ -48,39 +48,79 @@ class _RouteState extends State<MyRoute> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(widget.steps.toString()),
-          ElevatedButton(
-              onPressed: () {
-                if (widget.i == widget.path.length) {
-                  speakRoute(source: "You Have reached your destination");
-                } else if (widget.steps == 0) {
-                  setState(() {
-                    widget.i = widget.i + 1;
-                    // if (widget.i >= widget.path.length()) {}
-                    print("Azan" + widget.i.toString());
-                    widget.steps = widget.path[widget.i]["weight"];
-                    speakRoute(
+        appBar: AppBar(
+          title: const Text(
+            'Blind Navigation',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.white),
+          ),
+          leading: const Icon(Icons.sort_rounded, color: Colors.white,),
+          backgroundColor: Colors.red,
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: Colors.red,
+                    width: 8.0,
+                  ),
+                ),
+                width: 200.0,
+                height: 200.0,
+                padding: EdgeInsets.all(16.0),
+                child: Center(
+                  child: Text(
+                    widget.steps.toString(),
+                    style: TextStyle(
+                      fontSize: 100.0, 
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 16.0),
+              ElevatedButton(
+                onPressed: () {
+                  if (widget.i == widget.path.length) {
+                    speakRoute(source: "You Have reached your destination");
+                    Navigator.pop(context);
+                  } else if (widget.steps == 0) {
+                    setState(() {
+                      widget.i = widget.i + 1;
+                      print("Azan" + widget.i.toString());
+                      widget.steps = widget.path[widget.i]["weight"];
+                      speakRoute(
                         source: "Go " +
                             widget.steps.toString() +
                             " steps " +
                             widget.path[widget.i]["direction"] +
                             " towards " +
-                            widget.path[widget.i]["to"]);
-                  });
-                } else {
-                  setState(() {
-                    widget.steps = widget.steps - 1;
-                  });
-                }
-              },
-              child: Text("count"))
-        ],
-      ),
-    ));
+                            widget.path[widget.i]["to"],
+                      );
+                    });
+                  } else {
+                    setState(() {
+                      widget.steps = widget.steps - 1;
+                    });
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Color.fromARGB(255, 245, 145, 138),
+                  padding: EdgeInsets.all(24.0),
+                ),
+                child: Text(
+                  "Count",
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ));
   }
 
   void loadUetGraph() {
