@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_app01/graph.dart';
+import 'package:my_app01/route.dart';
 import 'voice.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
@@ -88,23 +89,18 @@ class _MyHomePageState extends State<MyHomePage> {
             SizedBox(height: 30),
             ElevatedButton(
                 onPressed: () {
-                  speakRoute(
-                      source: _sourceCantroller.text,
-                      destination: _destinationController.text);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => MyRoute(
+                              source: _sourceCantroller.text,
+                              destination: _destinationController.text,
+                            )),
+                  );
                 },
                 child: Text("Go")),
             SizedBox(height: 30),
-            VoiceInputWidget(
-              // Pass a callback function to the child widget
-              onGettingInput: (source, destination) {
-                setState(() {
-                  // Update the value in the parent widget
-                  _sourceCantroller.text = source;
-                  _destinationController.text = destination;
-                  print('Source: $source, Destination: $destination');
-                });
-              },
-            ),
+            VoiceInputWidget(),
           ],
         ),
       ),

@@ -2,19 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:my_app01/graph.dart';
 import 'package:my_app01/route.dart';
-import 'package:my_app01/voice2.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
-class VoiceInputWidget extends StatefulWidget {
+class VoiceInput2Widget extends StatefulWidget {
   late DirectedWeightedGraph uetGraph;
+  late String source;
+  VoiceInput2Widget({required this.source});
   @override
-  _VoiceInputWidgetState createState() => _VoiceInputWidgetState();
+  _VoiceInput2WidgetState createState() => _VoiceInput2WidgetState();
 }
 
-class _VoiceInputWidgetState extends State<VoiceInputWidget> {
+class _VoiceInput2WidgetState extends State<VoiceInput2Widget> {
   bool isListening = false;
   final SpeechToText _speechToText = SpeechToText();
-  String source = "";
+  String destination = "";
   FlutterTts flutterTts = FlutterTts();
   void setState(VoidCallback fn) {
     // TODO: implement setState
@@ -32,34 +33,35 @@ class _VoiceInputWidgetState extends State<VoiceInputWidget> {
     setState(() {});
   }
 
-  void _startListening() async {
-    await _speechToText.listen(onResult: _onSpeakResult);
+  void _startListening() {
+    _speechToText.listen(onResult: _onSpeakResult);
     setState(() {
       isListening = true;
     });
   }
 
-  void _stopListening() async {
-    await _speechToText.stop();
+  void _stopListening() {
+    _speechToText.stop();
     setState(() {
       isListening = false;
-    });
-    print(source + "....");
-    if (widget.uetGraph.vertexExists(source.toLowerCase())) {
-      print("lomojaba");
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => VoiceInput2Widget(source: source)),
-      );
+      print(destination + "....");
+      if (widget.uetGraph.vertexExists(destination.toLowerCase())) {
+        print("lomojaba");
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  MyRoute(destination: destination, source: widget.source)),
+        );
 
-      // widget.onGettingInput(source, destination);
-    }
+        // widget.onGettingInput(destination, destination);
+      }
+    });
   }
 
   void _onSpeakResult(result) {
     setState(() {
-      source = result.recognizedWords ?? "";
+      destination = result.recognizedWords ?? "";
     });
   }
 
@@ -84,11 +86,11 @@ class _VoiceInputWidgetState extends State<VoiceInputWidget> {
         SizedBox(height: 15),
         GestureDetector(
           onLongPress: () async {
-            // speakRoute("Where you are?");
+            speakRoute("Where you want to go?");
             _startListening();
+            print(isListening);
           },
           onLongPressEnd: (LongPressEndDetails details) {
-            print(isListening);
             _stopListening();
           },
           child: InkResponse(
@@ -108,7 +110,7 @@ class _VoiceInputWidgetState extends State<VoiceInputWidget> {
           ),
         ),
         SizedBox(height: 10),
-        Text(source),
+        Text(destination),
       ],
     );
   }
