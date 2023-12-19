@@ -68,14 +68,14 @@ class _RouteState extends State<MyRoute> {
                     width: 8.0,
                   ),
                 ),
-                width: 200.0,
-                height: 200.0,
+                width: 400.0,
+                height: 400.0,
                 padding: EdgeInsets.all(16.0),
                 child: Center(
                   child: Text(
                     widget.steps.toString(),
                     style: TextStyle(
-                      fontSize: 100.0, 
+                      fontSize: 150.0, 
                     ),
                   ),
                 ),
@@ -126,33 +126,167 @@ class _RouteState extends State<MyRoute> {
   void loadUetGraph() {
     widget.uetGraph = DirectedWeightedGraph();
     widget.uetGraph.addVertex("gate 3");
-    widget.uetGraph.addVertex("junction");
-    widget.uetGraph.addVertex("kiks department");
+    widget.uetGraph.addVertex("environmental engineering department");
     widget.uetGraph.addVertex("electrical engineering department");
     widget.uetGraph.addVertex("main library");
+    widget.uetGraph.addVertex("library golchakar");
+    widget.uetGraph.addVertex("architecture department");
+    widget.uetGraph.addVertex("city and regional planning");
+    widget.uetGraph.addVertex("masjid chowk");
+    widget.uetGraph.addVertex("islamic department");
+    widget.uetGraph.addVertex("lalazar chowk");
+    widget.uetGraph.addVertex("admin block");
+    widget.uetGraph.addVertex("pid department");
+    widget.uetGraph.addVertex("architecture engineering department");
+    widget.uetGraph.addVertex("laser and optics centert");
+    widget.uetGraph.addVertex("star photoshop");
+    widget.uetGraph.addVertex("bus stand chowk");
+    widget.uetGraph.addVertex("ibm deprtment");
+    widget.uetGraph.addVertex("ibm chowk");
+    widget.uetGraph.addVertex("bssc");
+    widget.uetGraph.addVertex("security office chowk");
+    widget.uetGraph.addVertex("bhola caffe");
+    widget.uetGraph.addVertex("junaid jamshed garden");
+    widget.uetGraph.addVertex("jj chowk");
+    widget.uetGraph.addVertex("humanities department");
+    widget.uetGraph.addVertex("chemical engineering department");
+    widget.uetGraph.addVertex("chemical engineering chowk");
+    widget.uetGraph.addVertex("petroleum and mining department");
+    widget.uetGraph.addVertex("notice chowk");
+    widget.uetGraph.addVertex("polymer department");
+    widget.uetGraph.addVertex("lecture threater");
     widget.uetGraph.addVertex("civil department");
+    widget.uetGraph.addVertex("transportation department");
     widget.uetGraph.addVertex("computer science department");
+    widget.uetGraph.addVertex("gssc chowk");
+    widget.uetGraph.addVertex("computer engineering department");
+    widget.uetGraph.addVertex("maths department");
+    widget.uetGraph.addVertex("mechatronics department");
+    widget.uetGraph.addVertex("kics department");
 
-    widget.uetGraph.addEdge("gate 3", "junction", 5, "north");
-    widget.uetGraph.addEdge("junction", "gate 3", 5, "south");
+    widget.uetGraph.addEdge("gate 3", "electrical engineering department", 40, "north");
+    widget.uetGraph.addEdge("electrical engineering department", "gate 3", 40, "south");
 
-    widget.uetGraph.addEdge("junction", "kiks department", 10, "east");
-    widget.uetGraph.addEdge("kiks department", "junction", 10, "west");
+    widget.uetGraph.addEdge("electrical engineering department", "environmental engineering department", 10, "north");
+    widget.uetGraph.addEdge("environmental engineering department", "electrical engineering department", 10, "south");
 
-    widget.uetGraph
-        .addEdge("electrical engineering department", "junction", 3, "west");
-    widget.uetGraph
-        .addEdge("junction", "electrical engineering department", 3, "east");
+    widget.uetGraph.addEdge("environmental engineering department", "main library", 180, "north");
+    widget.uetGraph.addEdge("main library", "environmental engineering department", 180, "south");
 
-    widget.uetGraph.addEdge("junction", "main library", 11, "north");
-    widget.uetGraph.addEdge("main library", "junction", 11, "south");
+    widget.uetGraph.addEdge("main library", "library golchakar", 35, "north");
+    widget.uetGraph.addEdge("library golchakar", "main library", 35, "south");
 
-    widget.uetGraph.addEdge("main library", "civil department", 12, "east");
-    widget.uetGraph.addEdge("civil department", "main library", 12, "west");
+    widget.uetGraph.addEdge("library golchakar", "architecture department", 35, "west");
+    widget.uetGraph.addEdge("architecture department", "library golchakar", 35, "east");
 
-    widget.uetGraph
-        .addEdge("civil department", "computer science department", 13, "east");
-    widget.uetGraph
-        .addEdge("computer science department", "civil department", 13, "west");
+    widget.uetGraph.addEdge("architecture department", "city and regional planning", 50, "west");
+    widget.uetGraph.addEdge("city and regional planning", "architecture department", 50, "east");
+
+    widget.uetGraph.addEdge("city and regional planning", "masjid chowk", 40, "west");
+    widget.uetGraph.addEdge("masjid chowk", "city and regional planning", 40, "east");
+
+    widget.uetGraph.addEdge("masjid chowk", "islamic department", 110, "south");
+    widget.uetGraph.addEdge("islamic department", "masjid chowk", 110, "north");
+
+    widget.uetGraph.addEdge("islamic department", "lalazar chowk", 50, "south");
+    widget.uetGraph.addEdge("lalazar chowk", "islamic department", 50, "north");
+
+    widget.uetGraph.addEdge("lalazar chowk", "admin block", 60, "south");
+    widget.uetGraph.addEdge("admin block", "lalazar chowk", 60, "north");
+
+    widget.uetGraph.addEdge("admin block", "pid department", 55, "west");
+    widget.uetGraph.addEdge("pid department", "admin block", 55, "east");
+
+    widget.uetGraph.addEdge("pid department", "architecture engineering department", 30, "west");
+    widget.uetGraph.addEdge("architecture engineering department", "pid department", 30, "east");
+
+    widget.uetGraph.addEdge("architecture engineering department", "laser and optics centert", 5, "west");
+    widget.uetGraph.addEdge("laser and optics centert", "architecture engineering department", 5, "east");
+
+    widget.uetGraph.addEdge("laser and optics centert", "star photoshop", 50, "west");
+    widget.uetGraph.addEdge("star photoshop", "laser and optics centert", 50, "east");
+
+    widget.uetGraph.addEdge("star photoshop", "bus stand chowk", 160, "north");
+    widget.uetGraph.addEdge("bus stand chowk", "star photoshop", 160, "south");
+
+    widget.uetGraph.addEdge("bus stand chowk", "masjid chowk", 60, "east");
+    widget.uetGraph.addEdge("masjid chowk", "bus stand chowk", 60, "west");
+
+    widget.uetGraph.addEdge("masjid chowk", "ibm deprtment", 50, "west");
+    widget.uetGraph.addEdge("ibm deprtment", "masjid chowk", 50, "east");
+
+    widget.uetGraph.addEdge("ibm deprtment", "ibm chowk", 20, "west");
+    widget.uetGraph.addEdge("ibm chowk", "ibm deprtment", 20, "east");
+
+    widget.uetGraph.addEdge("ibm chowk", "bssc", 35, "west");
+    widget.uetGraph.addEdge("bssc", "ibm chowk", 35, "east");
+
+    widget.uetGraph.addEdge("ibm chowk", "security office chowk", 250, "north");
+    widget.uetGraph.addEdge("security office chowk", "ibm chowk", 250, "south");
+
+    widget.uetGraph.addEdge("security office chowk", "bhola caffe", 100, "east");
+    widget.uetGraph.addEdge("bhola caffe", "security office chowk", 100, "west");
+
+    widget.uetGraph.addEdge("bhola caffe", "junaid jamshed garden", 90, "east");
+    widget.uetGraph.addEdge("junaid jamshed garden", "bhola caffe", 90, "west");
+
+    widget.uetGraph.addEdge("junaid jamshed garden", "jj chowk", 40, "east");
+    widget.uetGraph.addEdge("jj chowk", "junaid jamshed garden", 40, "west");
+
+    widget.uetGraph.addEdge("jj chowk", "humanities department", 40, "east");
+    widget.uetGraph.addEdge("humanities department", "jj chowk", 40, "west");
+
+    widget.uetGraph.addEdge("humanities department", "chemical engineering department", 50, "east");
+    widget.uetGraph.addEdge("chemical engineering department", "humanities department", 50, "west");
+
+    widget.uetGraph.addEdge("chemical engineering department", "chemical engineering chowk", 50, "east");
+    widget.uetGraph.addEdge("chemical engineering chowk", "chemical engineering department", 50, "west");
+
+    widget.uetGraph.addEdge("chemical engineering chowk", "petroleum and mining department", 95, "south");
+    widget.uetGraph.addEdge("petroleum and mining department", "chemical engineering chowk", 95, "north");
+
+    widget.uetGraph.addEdge("petroleum and mining department", "notice chowk", 55, "south west");
+    widget.uetGraph.addEdge("notice chowk", "petroleum and mining department", 95, "north east");
+
+    widget.uetGraph.addEdge("notice chowk", "polymer department", 40, "west");
+    widget.uetGraph.addEdge("polymer department", "notice chowk", 40, "east");
+
+    widget.uetGraph.addEdge("polymer department", "library golchakar", 120, "south");
+    widget.uetGraph.addEdge("library golchakar", "polymer department", 120, "north");
+
+    widget.uetGraph.addEdge("library golchakar", "lecture threater", 65, "east");
+    widget.uetGraph.addEdge("lecture threater", "library golchakar", 65, "west");
+
+    widget.uetGraph.addEdge("lecture threater", "computer science department", 65, "east");
+    widget.uetGraph.addEdge("computer science department", "lecture threater", 65, "west");
+
+    widget.uetGraph.addEdge("lecture threater", "civil department", 65, "east");
+    widget.uetGraph.addEdge("civil department", "lecture threater", 65, "west");
+
+    widget.uetGraph.addEdge("civil department", "transportation department", 70, "east");
+    widget.uetGraph.addEdge("transportation department", "civil department", 70, "west");
+
+    widget.uetGraph.addEdge("lecture threater", "transportation department", 70, "east");
+    widget.uetGraph.addEdge("transportation department", "lecture threater", 70, "west");
+
+    widget.uetGraph.addEdge("computer science department", "transportation department", 70, "east");
+    widget.uetGraph.addEdge("transportation department", "computer science department", 70, "west");
+
+    widget.uetGraph.addEdge("transportation department", "gssc chowk", 50, "east");
+    widget.uetGraph.addEdge("gssc chowk", "transportation department", 50, "west");
+
+    widget.uetGraph.addEdge("gssc chowk", "maths department", 50, "south");
+    widget.uetGraph.addEdge("maths department", "gssc chowk", 50, "north");
+
+    widget.uetGraph.addEdge("maths department", "computer engineering department", 10, "north");
+    widget.uetGraph.addEdge("computer engineering department", "maths department", 10, "south");
+
+    widget.uetGraph.addEdge("computer engineering department", "kics department", 50, "south");
+    widget.uetGraph.addEdge("kics department", "computer engineering department", 50, "north");
+
+    widget.uetGraph.addEdge("kics department", "mechatronics department", 50, "south");
+    widget.uetGraph.addEdge("mechatronics department", "kics department", 50, "north");
+
+
   }
 }
